@@ -1,0 +1,14 @@
+version: "2"
+services:
+  nfs:
+    image: nfs-server
+    container_name: nfs-server
+    privileged: true
+    volumes:
+      - ./nfsshare:/nfsshare
+      - ./exports:/etc/exports
+    ports:
+      - 111:111
+      - 111:111/udp
+      - 2049:2049
+      - 2049:2049/udp

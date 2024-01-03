@@ -1,22 +1,25 @@
 FROM ubuntu:latest
 
-MAINTAINER Pepijn Bruienne bruienne@gmail.com
-
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV VERSION 0.10.0
+
 RUN apt-get update && \
-    apt-get install -y build-essential flex bison nfs-client curl
+    apt-get install -y build-essential flex bison nfs-client curl pkg-config
 
 RUN apt-get clean all
 
-ADD http://iweb.dl.sourceforge.net/project/unfs3/unfs3/0.9.22/unfs3-0.9.22.tar.gz /
+ADD https://github.com/unfs3/unfs3/releases/download/unfs3-${VERSION}/unfs3-${VERSION}.tar.gz /
 
-RUN tar zxf /unfs3-0.9.22.tar.gz && \
-    cd /unfs3-0.9.22 && \
+RUN tar zxf /unfs3-${VERSION}.tar.gz && \
+    ls -la && \
+    cd /unfs3-${VERSION} && \
     ./configure && make && make install
 
 ADD exports.dist /etc/exports
 ADD start.sh /start.sh
+
+RUN mkdir -p /run/sendsigs.omit.d
 
 RUN chmod +x /start.sh
 
